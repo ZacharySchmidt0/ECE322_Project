@@ -4,14 +4,14 @@
 import unittest
 
 # import your tests modules (Apply integration testing method)
-import TestModuleA
+import TestErrorGuessing
 
 # initialize the tests suite
 loader = unittest.TestLoader()
 suite  = unittest.TestSuite()
 
 # add tests to the tests suite
-suite.addTests(loader.loadTestsFromModule(TestModuleA))
+suite.addTests(loader.loadTestsFromModule(TestErrorGuessing))
 
 # initialize a runner, pass it your suite and run it
 runner = unittest.TextTestRunner(verbosity=3)

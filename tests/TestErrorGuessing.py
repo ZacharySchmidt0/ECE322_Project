@@ -9,6 +9,12 @@ path_root = Path(__file__).parents[1]
 sys.path.append(str(path_root))
 from modules.Tweeter import Tweeter
 
+"""
+Author: Zachary Schmidt
+
+This class tests the main functions of the Tweeter app from the perspective of error guessing. Test cases were initially
+developed by ChatGPT and then refined by the author.
+"""
 class TestTwitterEmulator(unittest.TestCase):
     @patch("modules.Tweeter.inquirer.text")
     @patch("modules.Tweeter.inquirer.secret")
@@ -134,68 +140,53 @@ class TestTwitterEmulator(unittest.TestCase):
         conn.close()
 
     @patch("modules.Tweeter.inquirer.text")
-    def test_search_tweets(self, mocked_prompt):
-        # Mocking the behavior of InquirerPy's prompt for the search tweets test case
-        mocked_prompt.return_value.execute.return_value = "Search for tweets"
-
+    @patch("modules.Tweeter.inquirer.select")
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_search_tweets(self, mocked_function_menu, mocked_selection, mocked_prompt):
         twitter_emulator = Tweeter("example.db")
         twitter_emulator.user_id = "LoggedInUser"
-        twitter_emulator.function_menu()
-
-        # Assert that the selected option is "Search for tweets"
-        self.assertEqual(twitter_emulator.selected_option, "Search for tweets")
 
         # Mocking the behavior of InquirerPy's prompt for the search tweets screen
-        mocked_prompt.return_value.execute.return_value = "Search Keywords"
+        mocked_prompt.return_value.execute.return_value = "tweet1"
+        mocked_selection.return_value.execute.return_value = "x"
+
+        # Mocking the behavior of start_screen to exit the program
+        def exit_program():
+            x = 1
+
+        mocked_function_menu.side_effect = exit_program
 
         twitter_emulator.search_for_tweets()
 
-        # Assert that the keywords are set to "Search Keywords"
-        self.assertEqual(twitter_emulator.keywords, "Search Keywords")
+        for selection in mocked_selection.call_args_list[0][1]['choices']:
+            selectionStr = selection.name
+            if "Writer" in selectionStr:
+                self.assertIn("tweet1", selectionStr)
 
-    """@patch("modules.Tweeter.inquirer.text")
-    def test_search_users(self, mocked_prompt):
-        # Mocking the behavior of InquirerPy's prompt for the search users test case
-        mocked_prompt.return_value.execute.return_value = "Search for users"
-
+    @patch("modules.Tweeter.inquirer.text")
+    @patch("modules.Tweeter.inquirer.select")
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_search_users(self, mocked_function_menu, mocked_selection, mocked_prompt):
         twitter_emulator = Tweeter("example.db")
         twitter_emulator.user_id = "LoggedInUser"
-        twitter_emulator.function_menu()
-
-        # Assert that the selected option is "Search for users"
-        self.assertEqual(twitter_emulator.selected_option, "Search for users")
 
         # Mocking the behavior of InquirerPy's prompt for the search users screen
-        mocked_prompt.return_value.execute.return_value = "Search Keywords"
+        mocked_prompt.return_value.execute.return_value = "usr1"
+        mocked_selection.return_value.execute.return_value = "x"
+
+        # Mocking the behavior of start_screen to exit the program
+        def exit_program():
+            x = 1
+
+        mocked_function_menu.side_effect = exit_program
 
         twitter_emulator.search_for_users()
 
-        # Assert that the keywords are set to "Search Keywords"
-        self.assertEqual(twitter_emulator.keywords, "Search Keywords")
-
-    @patch("modules.Tweeter.inquirer.text")
-    def test_compose_tweet_input(self, mocked_text):
-        # Mocking the behavior of InquirerPy's text prompt for the compose tweet input test case
-        mocked_text.return_value.execute.return_value = "Test tweet"
-
-        twitter_emulator = Tweeter("example.db")
-        twitter_emulator.user_id = "LoggedInUser"
-        twitter_emulator.compose_tweet()
-
-        # Assert that the tweet text is set to "Test tweet"
-        self.assertEqual(twitter_emulator.tweet_text, "Test tweet")
-
-    @patch("modules.Tweeter.inquirer.text")
-    def test_compose_tweet_length_limit(self, mocked_text):
-        # Mocking the behavior of InquirerPy's text prompt for the compose tweet length limit test case
-        mocked_text.return_value.execute.return_value = "Too Long Tweet" + "a" * 140
-
-        twitter_emulator = Tweeter("example.db")
-        twitter_emulator.user_id = "LoggedInUser"
-        twitter_emulator.compose_tweet()
-
-        # Assert that the tweet text is truncated to 140 characters
-        self.assertEqual(len(twitter_emulator.tweet_text), 140)"""
+        # Adjust the assertion based on the actual structure of the choices
+        for selection in mocked_selection.call_args_list[0][1]['choices']:
+            selectionStr = selection.name
+            if "User ID" in selectionStr:
+                self.assertIn("usr1", selectionStr)
 
 if __name__ == "__main__":
     unittest.main()

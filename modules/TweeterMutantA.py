@@ -49,30 +49,18 @@ class Tweeter:
             self.quit()
 
     def login(self):
-        """Prompts the user for their user id and password then checks if the entered values
-        are in the database. If the password and user id match to a user in the database proceed
-        to follower feed"""
         clear_console()
-        user_id = inquirer.text(
-            message="Enter User ID: "
-        ).execute()
-        password = inquirer.secret(
-            message="Enter Password: "
-        ).execute()
+        user_id = inquirer.text(message="Enter User ID: ").execute()
+        password = inquirer.secret(message="Enter Password: ").execute()
 
-        # Check if user_id and password pair is in users table
-        self.c.execute(
-            """SELECT usr FROM users WHERE usr = ? AND pwd = ?;""", (
-                user_id, password)
-        )
+        # Mutant Change: Incorrectly handles the user_id and password validation
+        self.c.execute("SELECT usr FROM users WHERE usr = ? AND pwd = ?;", (user_id, password))
 
-        # No user was found with matching user_id and password
-        if self.c.fetchone() is None:
+        # Mutant: behaves incorrectly when a user is found
+        if self.c.fetchone() is not None:
             rprint("[red]ERROR: Incorrect User Id or Password[red]\n")
             time.sleep(1)
             self.start_screen()
-
-        # If the user id and password match a row in the users table
         else:
             self.user_id = user_id
             self.follow_feed()
@@ -113,7 +101,8 @@ class Tweeter:
             message="Enter Password: "
         ).execute()
 
-        self.insert_user(password, name, email, city, timezone)
+        # MUTANT CHANGE
+        # self.insert_user(password, name, email, city, timezone)
         print(f"Your User Id is: {self.get_next_user_id()-1}")
         time.sleep(2)
 
@@ -353,7 +342,8 @@ class Tweeter:
                        (self.user_id, follow_user_id))
 
         # If the operating user is not already following the selected user
-        if self.c.fetchone() is None:
+        # MUTANT CHANGE
+        if self.c.fetchone() is not None:
             self.c.execute("""INSERT INTO follows (flwer, flwee, start_date) VALUES (?, ?, ?);""",
                            (self.user_id, follow_user_id, datetime.date.today(), ))
             self.conn.commit()

@@ -95,17 +95,43 @@ class TestTwitterEmulator(unittest.TestCase):
             connection.commit()
             connection.close()
 
-    """@patch("modules.Tweeter.inquirer.text")
-    def test_compose_tweet(self, mocked_prompt):
+    @patch("modules.Tweeter.inquirer.text")
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_compose_tweet(self, mocked_function_menu, mocked_text):
         # Mocking the behavior of InquirerPy's prompt for the compose tweet test case
-        mocked_prompt.return_value.execute.return_value = "Compose a tweet"
+        tweet_text = "Compose a tweet"
+        mocked_text.return_value.execute.return_value = tweet_text
+
+        conn = sqlite3.connect("example.db")
+        cursor = conn.cursor()
+
+        # Mocking the behavior of start_screen to exit the program
+        def exit_program():
+            x = 1
+
+        mocked_function_menu.side_effect = exit_program
 
         twitter_emulator = Tweeter("example.db")
+        twitter_emulator.compose_tweet()
         twitter_emulator.user_id = "LoggedInUser"
-        twitter_emulator.function_menu()
 
-        # Assert that the selected option is "Compose a tweet"
-        self.assertEqual(twitter_emulator.selected_option, "Compose a tweet")
+        # Call the compose_tweet method to test
+        twitter_emulator.compose_tweet()
+
+        # Check if the tweet is inserted into the database correctly
+        cursor.execute("SELECT * FROM tweets WHERE writer = 'LoggedInUser';")
+        result = cursor.fetchone()
+        self.assertIsNotNone(result)
+        tweet_id, writer, tdate, text, replyto = result
+        self.assertEqual(writer, "LoggedInUser")
+        # You may need to adjust these assertions based on the actual implementation
+        self.assertIsNotNone(tdate)
+        self.assertEqual(text, "Compose a tweet")
+        self.assertIsNone(replyto)
+
+        cursor.execute("DELETE FROM tweets WHERE text = ?;", (tweet_text,))
+        conn.commit()
+        conn.close()
 
     @patch("modules.Tweeter.inquirer.text")
     def test_search_tweets(self, mocked_prompt):
@@ -127,7 +153,7 @@ class TestTwitterEmulator(unittest.TestCase):
         # Assert that the keywords are set to "Search Keywords"
         self.assertEqual(twitter_emulator.keywords, "Search Keywords")
 
-    @patch("modules.Tweeter.inquirer.text")
+    """@patch("modules.Tweeter.inquirer.text")
     def test_search_users(self, mocked_prompt):
         # Mocking the behavior of InquirerPy's prompt for the search users test case
         mocked_prompt.return_value.execute.return_value = "Search for users"

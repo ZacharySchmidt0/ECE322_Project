@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
 from pathlib import Path
 import sys
@@ -28,7 +28,7 @@ class TestTwitterEmulator(unittest.TestCase):
 
         # Mocking the behavior of start_screen to exit the program
         def exit_program():
-            x = 1
+            pass
 
         mocked_start_screen.side_effect = exit_program
 
@@ -50,7 +50,7 @@ class TestTwitterEmulator(unittest.TestCase):
 
         # Mocking the behavior of start_screen to exit the program
         def exit_program():
-            x = 1
+            pass
 
         mocked_start_screen.side_effect = exit_program
 
@@ -83,7 +83,7 @@ class TestTwitterEmulator(unittest.TestCase):
 
             # Mocking the behavior of start_screen to exit the program
             def exit_program():
-                x = 1
+                pass
 
             mocked_follow_feed.side_effect = exit_program
 
@@ -113,7 +113,7 @@ class TestTwitterEmulator(unittest.TestCase):
 
         # Mocking the behavior of start_screen to exit the program
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 
@@ -152,7 +152,7 @@ class TestTwitterEmulator(unittest.TestCase):
 
         # Mocking the behavior of start_screen to exit the program
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 
@@ -176,7 +176,7 @@ class TestTwitterEmulator(unittest.TestCase):
 
         # Mocking the behavior of start_screen to exit the program
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 

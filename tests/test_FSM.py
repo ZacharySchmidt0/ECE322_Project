@@ -8,6 +8,12 @@ path_root = Path(__file__).parents[1]
 sys.path.append(str(path_root))
 from modules.Tweeter import Tweeter
 
+"""
+Author: Zachary Schmidt
+
+This class tests the main functions of the Tweeter app from the perspective of visiting all states and transitions
+in a FSM that represents the program. Test cases were initially developed by ChatGPT and then refined by the author.
+"""
 class TestTwitterEmulationFSM(unittest.TestCase):
 
     def setUp(self):
@@ -19,7 +25,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
         mock_selection.return_value.execute.return_value = "Login"
 
         def exit_program():
-            x = 1
+            pass
 
         mocked_login.side_effect = exit_program
 
@@ -35,7 +41,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
         mocked_password.return_value.execute.return_value = "aaa"
 
         def exit_program():
-            x = 1
+            pass
 
         mocked_follow_feed.side_effect = exit_program
 
@@ -52,7 +58,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
             mocked_password.return_value.execute.return_value = "newpwd12!"
 
             def exit_program():
-                x = 1
+                pass
 
             mocked_start_screen.side_effect = exit_program
 
@@ -89,7 +95,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
         mock_text.return_value.execute.return_value = ""
 
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 
@@ -106,7 +112,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
         mock_text.return_value.execute.return_value = ""
 
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 
@@ -123,7 +129,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
         mock_text.return_value.execute.return_value = ""
 
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 
@@ -140,7 +146,7 @@ class TestTwitterEmulationFSM(unittest.TestCase):
         mock_text.return_value.execute.return_value = ""
 
         def exit_program():
-            x = 1
+            pass
 
         mocked_function_menu.side_effect = exit_program
 

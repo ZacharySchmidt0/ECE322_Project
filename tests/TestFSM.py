@@ -81,35 +81,85 @@ class TestTwitterEmulationFSM(unittest.TestCase):
             connection.commit()
             connection.close()
 
+    @patch("modules.Tweeter.inquirer.select")
     @patch("modules.Tweeter.inquirer.text")
-    def test_transition_from_user_home_to_search_tweets(self, mock_text_input):
-        mock_text_input.return_value = "search_tweets"
-        self.twitter_emulation.user_home()
-        # Add assertions based on the expected state or behavior after the transition
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_transition_from_user_home_to_search_tweets(self, mocked_function_menu, mock_text, mock_selection):
+        mock_selection.return_value.execute.return_value = "Search for tweets"
+        mock_text.return_value.execute.return_value = ""
 
-    """@patch("modules.Tweeter.inquirer.text")
-    def test_transition_from_user_home_to_search_users(self, mock_text_input):
-        mock_text_input.return_value = "search_users"
-        self.twitter_emulation.user_home()
-        # Add assertions based on the expected state or behavior after the transition
+        def exit_program():
+            x = 1
 
+        mocked_function_menu.side_effect = exit_program
+
+        self.twitter_emulation.start_screen()
+
+        # asserts we have returned to the main screen
+        self.assertEqual(mock_selection.call_args_list[0][1]['choices'], ['Login', 'Sign Up', 'Exit'])
+
+    @patch("modules.Tweeter.inquirer.select")
     @patch("modules.Tweeter.inquirer.text")
-    def test_transition_from_user_home_to_compose_tweet(self, mock_text_input):
-        mock_text_input.return_value = "compose_tweet"
-        self.twitter_emulation.user_home()
-        # Add assertions based on the expected state or behavior after the transition
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_transition_from_user_home_to_search_users(self, mocked_function_menu, mock_text, mock_selection):
+        mock_selection.return_value.execute.return_value = "Search for users"
+        mock_text.return_value.execute.return_value = ""
 
-    @patch("modules.Tweeter.inquirer.text")
-    def test_transition_from_user_home_to_list_followers(self, mock_text_input):
-        mock_text_input.return_value = "list_followers"
-        self.twitter_emulation.user_home()
-        # Add assertions based on the expected state or behavior after the transition
+        def exit_program():
+            x = 1
 
+        mocked_function_menu.side_effect = exit_program
+
+        self.twitter_emulation.start_screen()
+
+        # asserts we have returned to the main screen
+        self.assertEqual(mock_selection.call_args_list[0][1]['choices'], ['Login', 'Sign Up', 'Exit'])
+
+    @patch("modules.Tweeter.inquirer.select")
     @patch("modules.Tweeter.inquirer.text")
-    def test_transition_from_user_home_to_logout(self, mock_text_input):
-        mock_text_input.return_value = "logout"
-        self.twitter_emulation.user_home()
-        # Add assertions based on the expected state or behavior after the transition"""
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_transition_from_user_home_to_compose_tweet(self, mocked_function_menu, mock_text, mock_selection):
+        mock_selection.return_value.execute.return_value = "Compose a tweet"
+        mock_text.return_value.execute.return_value = ""
+
+        def exit_program():
+            x = 1
+
+        mocked_function_menu.side_effect = exit_program
+
+        self.twitter_emulation.start_screen()
+
+        # asserts we have returned to the main screen
+        self.assertEqual(mock_selection.call_args_list[0][1]['choices'], ['Login', 'Sign Up', 'Exit'])
+
+    @patch("modules.Tweeter.inquirer.select")
+    @patch("modules.Tweeter.inquirer.text")
+    @patch("modules.Tweeter.Tweeter.function_menu")
+    def test_transition_from_user_home_to_list_followers(self, mocked_function_menu, mock_text, mock_selection):
+        mock_selection.return_value.execute.return_value = "List followers"
+        mock_text.return_value.execute.return_value = ""
+
+        def exit_program():
+            x = 1
+
+        mocked_function_menu.side_effect = exit_program
+
+        self.twitter_emulation.start_screen()
+
+        # set user_id to user with followers. Check those printed are actually printed
+
+        # asserts we have returned to the main screen
+        self.assertEqual(mock_selection.call_args_list[0][1]['choices'], ['Login', 'Sign Up', 'Exit'])
+
+    @patch("modules.Tweeter.inquirer.select")
+    def test_transition_from_user_home_to_logout(self, mock_selection):
+        mock_selection.return_value.execute.return_value = "Logout"
+
+        self.twitter_emulation.user_id = "99"
+
+        self.twitter_emulation.function_menu()
+
+        self.assertIsNone(self.twitter_emulation.user_id)
 
 if __name__ == "__main__":
     unittest.main()

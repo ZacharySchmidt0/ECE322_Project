@@ -149,10 +149,9 @@ class Tweeter:
         clear_console()
         rprint("[red]Exiting now[red]")
         time.sleep(1)
-        self.conn.commit()
-        self.conn.close()
+        self.close_connection()
         exit()
-
+        
     def function_menu(self):
         """Prompts the user to select a system functionality or logout and return to the start menu"""
         clear_console()
@@ -780,9 +779,21 @@ class Tweeter:
             ) ORDER BY date DESC LIMIT ? OFFSET ?;
         """, (self.user_id, self.user_id, page_size, offset))
         return self.c.fetchall()
+    
+    #for testing since it keeps having opened connections
+    def close_connection(self):
+        """
+        Close the SQLite connection.
+        """
+        if self.conn:
+            self.conn.commit()
+            self.conn.close()
 
 
 if __name__ == "__main__":
 
     tweeter = Tweeter(str(sys.argv[1]))
-    tweeter.start_screen()
+    try:
+        tweeter.start_screen()
+    finally:
+        tweeter.close_connection()

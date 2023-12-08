@@ -108,7 +108,7 @@ def tweeter_performance_test(tweeter, iterations=5):
     conn = None  # Initialize connection variable outside the try block
 
     for i in range(iterations):
-        print(f"Run {i}:")
+        print(f"Run {i+1}:")
         try:
             start_time = time.time()
             tweeter.get_next_user_id()
@@ -147,7 +147,7 @@ def tweeter_performance_test(tweeter, iterations=5):
             print(f"get_tweet_statistics execution time: {end_time - start_time} seconds")
 
             start_time = time.time()
-            tweeter.insert_retweet(i+1)
+            tweeter.insert_retweet(i+19)
             end_time = time.time()
             print(f"insert_retweet execution time: {end_time - start_time} seconds")
 
